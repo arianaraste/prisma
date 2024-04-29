@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String  @id @default(uuid())
+  email           String  @unique
+  first_name      String
+  last_name       String?
+  age             Int?
+  phoneNumber     String?
+  role            Role    @default(BASIC)
+  writtenPosts    Post[]  @relation("writtenPosts")
+  favoritePosts   Post[]  @relation("favoritePosts")
+  userpreference  UserPreference?
+  // unique block => we cant have 2thinks there are same
+
+  @@unique([first_name , last_name])  //example => firstname : arian, last_name : araste | we cant try agin this first_name and last_name for new user
+}
+
+model UserPreference{
+  id            String  @id @default(uuid())
+  emailUpdate   Boolean
+  user          User    @relation(fields: [user_id],references: [id])
+  user_id       String  @unique
+}
+
+model Post {
+  id            String  @id @default(uuid())  
+  title         String
+  description   String?
+  createAt      DateTime
+  author        User    @relation("writtenPosts",fields: [authorId], references: [id])
+  authorId      String
+  favoriteBy    User    @relation("favoritePosts", fields: [favoriteById], references: [id])
+  favoriteById  String  
+  img           String
+  categories    Category[]  
+  category_id   String
+}
+
+model Category{
+  id            String  @id @default(uuid())
+  title         String  @unique
+  description   String?
+  Posts         Post[]     
+}
+enum  Role  {
+  BASIC
+  ADMIN
+  USER
+}

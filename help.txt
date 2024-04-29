@@ -1,0 +1,23 @@
+install prisma extensions => for highliting code when has problem
+automaticly fix => npx prisma format
+command = {
+ 1: npm init -y
+ 2: npm i --save-dev prisma typescript ts-node @types/node nodemon
+ 3: npx prisma init --datasource-provider postgresql // for creatitons some files and providing database to postgresql
+
+};
+
+
+how define a model ?
+
+model "model name" {
+    some fileds as => "field name"id "type fileds" Int "what is that"@ id "defult value" @defult(autiincrement())
+}
+
+//for creation table as model on data base we use this command
+npx prisma migarte dev --name init  
+
+npm i @prisma/client
+
+
+for re generate +> npx prisma generate
